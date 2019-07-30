@@ -1,7 +1,6 @@
 import numpy as np
 import statsmodels.formula.api as smf
 from pyspark.sql import SparkSession
-from src.calc.aggregations import _aggregate_from_day
 import abc
 import ipdb
 
@@ -39,35 +38,6 @@ class MixedModel(ABMethod):
         }
         return coef
 
-
-class GroupMethod(ABMethod):
-    name = "Group Method"
-    level = "clusterlevel"
-
-    def estimate(self, df):
-        # format df to match analytics
-        clust = df['clusterlevel'].rename(index=str, columns={
-                                    'sum': 'metric_sum',
-                                    'count': 'metric_count'
-                                })
-        clust.reset_index(level=0, inplace=True)
-        clust['partition_date_denver'] = '2019-01-03'
-        clust['variant_uuid'] = 'v1'
-
-        # build spark df
-        spark = SparkSession.builder.getOrCreate()
-        sparkdf = spark.createDataFrame(clust)
-        ipdb.set_trace()
-
-        # get aggregate stats
-        aggregates = _aggregate_from_day(sparkdf).first()
-        coef = {
-            'Estimate': aggregates.mean,
-            'Var': aggregates.std**2
-        }
-        return coef
-
-
 class GroupNoSpark(ABMethod):
     name = "Group Method(NS)"
     level = "clusterlevel"
@@ -79,8 +49,6 @@ class GroupNoSpark(ABMethod):
                                     'count': 'metric_count'
                                 })
         clust.reset_index(level=0, inplace=True)
-        clust['partition_date_denver'] = '2019-01-03'
-        clust['variant_uuid'] = 'v1'
         clust['value'] = clust['metric_sum'] / clust['metric_count']
 
         coef = {
@@ -109,27 +77,3 @@ class DeltaMethod(ABMethod):
         covxy=np.cov(num, denom)[0][1]
         est_var=(1 / mux**2 * vary + muy**2 / mux**4 * varx - 2 * muy / mux**3 * covxy) / len(num)
         return est_var
-
-class DeltaSpark(ABMethod):
-    name = "Delta Spark"
-    level = "unitlevel"
-    
-    def estimate(self, df):
-        # format df to match analytics
-        clust=df['clusterlevel'].rename(index=str, columns={
-                                    'sum': 'metric_sum',
-                                    'count': 'metric_count'
-                                })
-        clust.reset_index(level=0, inplace=True)
-        clust['partition_date_denver']='2019-01-03'
-        clust['variant_uuid']='v1'
-
-        # build spark df
-        spark=SparkSession.builder.getOrCreate()
-        sparkdf=spark.createDataFrame(clust)
-        aggregates=_aggregate_from_day(sparkdf).first()
-        coef={
-            'Estimate': aggregates.mean,
-            'Var': aggregates.std**2/df['unitlevel'].shape[0]
-        }
-        return coef

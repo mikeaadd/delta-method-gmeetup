@@ -167,81 +167,12 @@ if __name__ == '__main__':
     probs=[1/3, 1/2, 1/6]
     n=1000
     m=100
-    # bindata=UncorBinom(1, .6, n)
-    # tests=[Naive(), DeltaMethod(),GroupNoSpark()]
-    # binsim=Simulation(m, bindata, tests)
-    # binsim.run()
-    # bindf=binsim.power_test()
-    # bindf['truevar']= (.6 + bindf['effect_size'].astype(float))*(1 - .6 - bindf['effect_size'].astype(float))
-    # bindf[bindf['test'].isin(['Delta Method', 'Group Method(NS)'])].groupby(['test', 'effect_size']).mean()
-
+    bindata=UncorBinom(1, .6, n)
+    tests=[Naive(), DeltaMethod(),GroupNoSpark()]
+    binsim=Simulation(m, bindata, tests)
+    binsim.run()
+    bindf=binsim.power_test()
     hetdata = HetBinom(lamb, mu, sigma, n, probs)
-    tests=[Naive(), GroupMethod(),DeltaMethod(),DeltaSpark()]
+    tests=[Naive(), DeltaMethod()]
     hetsim=Simulation(m, hetdata, tests)
     hetsim.run()
-    # hetdf=hetsim.power_test()
-    # hetdf[hetdf['test'].isin(['Delta Method', 'Group Method(NS)'])].groupby(['test', 'effect_size']).mean()
-
-    # mu=[0.8, 0.5, 0.3]
-    # hetdata_r = HetBinom(lamb, mu, sigma, n, probs)
-    # tests=[Naive(), DeltaMethod(),GroupNoSpark()]
-    # hetsim_r=Simulation(m, hetdata_r, tests)
-    # hetsim_r.run()
-    # hetdf_r=hetsim.power_test()
-    # hetdf_r[hetdf_r['test'].isin(['Delta Method', 'Group Method(NS)'])].groupby(['test', 'effect_size']).mean()
-
-    # mu=[0.8, 0.5, 0.3]
-    # hetdata_r2 = HetBinom(lamb, mu, sigma, n, probs)
-    # tests=[DeltaMethod(),DeltaMethod_cluster()]
-    # hetsim_r2=Simulation(m, hetdata_r2, tests)
-    # hetsim_r2.run()
-    # hetdf_r2=hetsim_r2.power_test()
-    # hetdf_r2['delta_x'] = hetdf_r2['x2'] - hetdf_r2['x1']
-    # hetdf_r2[hetdf_r2['test'].isin(['Delta Method', 'Group Method(NS)'])].groupby(['test', 'effect_size']).mean()
-
-    # bindata2=UncorBinom(1, .6, n)
-    # tests=[DeltaMethod(),DeltaMethod_cluster()]
-    # binsim2=Simulation(m, bindata2, tests)
-    # binsim2.run()
-    # bindf2=binsim2.power_test()
-    # bindf2['truevar']= (.6 + bindf2['effect_size'].astype(float))*(1 - .6 - bindf2['effect_size'].astype(float))
-    # bindf2[bindf2['test'].isin(['Delta Method', 'Delta Method Cluster'])].groupby(['test', 'effect_size']).mean()
-
-    # mu=[0.3, 0.5, 0.8]
-    # sigma=[0.05, 0.1, 0.05]
-    # lamb=[30, 5, 2]
-    # probs=[1/3, 1/3, 1/3]
-    # n=1000
-    # m=100
-    # hetdata2 = HetBinom(lamb, mu, sigma, n, probs)
-    # tests=[Naive(), DeltaMethod(),GroupNoSpark()]
-    # hetsim2=Simulation(m, hetdata2, tests)
-    # hetsim2.run()
-    # hetdf2=hetsim2.power_test()
-    # hetdf2[hetdf2['test'].isin(['Delta Method', 'Group Method(NS)'])].groupby(['test', 'effect_size']).mean()
-
-    # mu=[0.3, 0.5, 0.8]
-    # sigma=[0.05, 0.1, 0.05]
-    # lamb=[5, 5, 5]
-    # probs=[1/3, 1/2, 1/6]
-    # n=1000
-    # m=100
-    # hetdata3 = HetBinom(lamb, mu, sigma, n, probs)
-    # tests=[Naive(), DeltaMethod(),GroupNoSpark()]
-    # hetsim3=Simulation(m, hetdata3, tests)
-    # hetsim3.run()
-    # hetdf3=hetsim3.power_test()
-    # hetdf3[hetdf3['test'].isin(['Delta Method', 'Group Method(NS)'])].groupby(['test', 'effect_size']).mean()
-
-    # mu=[0.5, 0.3, 0.3]
-    # sigma=[0.05, 0.1, 0.05]
-    # lamb=[5, 5, 5]
-    # probs=[1/3, 1/3, 1/3]
-    # n=1000
-    # m=100
-    # hetdata4 = HetBinom(lamb, mu, sigma, n, probs)
-    # tests=[Naive(), DeltaMethod(),GroupNoSpark()]
-    # hetsim4=Simulation(m, hetdata4, tests)
-    # hetsim4.run()
-    # hetdf4=hetsim4.power_test()
-    # hetdf4[hetdf4['test'].isin(['Delta Method', 'Group Method(NS)'])].groupby(['test', 'effect_size']).mean()
